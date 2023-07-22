@@ -54,7 +54,7 @@ class Tank(object):
 		flow_in = (
 					(self.episode_array[self.episode_counter,3]+self.FIC1_noise())*175 + \
 					(self.episode_array[self.episode_counter,4]+self.FIC2_noise())*215 + \
-					(self.episode_array[self.episode_counter,5]+self.FIC2_noise())*140) * \
+					(self.episode_array[self.episode_counter,5]+self.FIC3_noise())*140) * \
 					(self.scan_rate/60)
 
 		#calculate new level in inches
