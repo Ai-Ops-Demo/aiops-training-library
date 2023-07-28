@@ -6,6 +6,12 @@ __pycache__/
 # C extensions
 *.so
 
+#AiOPs Stuff
+/data
+*/.csv
+/env
+*.json
+
 # Distribution / packaging
 .Python
 build/
