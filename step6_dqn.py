@@ -11,23 +11,31 @@ tf.get_logger().setLevel('ERROR')
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 
 #keep tf from reserving 100% of GPU for this instance
-import tensorflow as tf
-gpu = tf.config.experimental.list_physical_devices('GPU')
-tf.config.experimental.set_memory_growth(gpu[0], True)
+# import tensorflow as tf
+# gpu = tf.config.experimental.list_physical_devices('GPU')
+# tf.config.experimental.set_memory_growth(gpu[0], True)
 
 #--------------------Variables for Simulator-------------------------------
 data_dir='data/norm_data/'
 dt1 = [
-	'10sDT/LIC101_AiPV9046',
-	'10sDT/LIC101_AiPV7847'
+	'dt/LIC101_AiPV2031',
+	'dt/LIC101_AiPV4998',
+	'dt/LIC101_AiPV5993',
+	'dt/LIC101_AiPV6154',
+	'dt/LIC101_AiPV7490'
 	]
-#what variables do you want the agent to see?
+
+
+#variable for the agent to control
 MVindex = 2
+
+#used in calculating the reward
 PVindex = 0
 SVindex = 1
 
+#what variables do you want the agent to see?
 agentIndex = [0,1,2,3,4,5] 
-agent_lookback=5
+agent_lookback = 5
 
 #about 3-5x as long as the system needs to respond to SP change
 episode_length = 250
@@ -47,7 +55,7 @@ controller_name = 'LIC01_AiMV'
 gamma = 0.95
 epsilon_decay = 0.99995
 max_step = 0.1       	#how much can the agent move each timestep
-training_scanrate = 2   #scanrate that the dt was trained on
+training_scanrate = 1   #scanrate that the dt was trained on
 execution_scanrate = 1  #rate that the model is to be executed
 
 

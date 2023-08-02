@@ -7,8 +7,8 @@ import os
 # from tensorflow.python.keras.models import load_model
 
 # silence tf warnings
-tf.get_logger().setLevel('ERROR')
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
+# tf.get_logger().setLevel('ERROR')
+# os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 
 
 class Simulator(object):

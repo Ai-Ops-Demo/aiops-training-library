@@ -1,6 +1,6 @@
-from tensorflow.python.keras.layers import Dense, Activation,Flatten
-from tensorflow.python.keras.models import Sequential
-from tensorflow.python.keras.optimizer_v2.adam import Adam
+from keras.layers import Dense, Activation,Flatten
+from keras.models import Sequential
+from keras.optimizers import Adam
 import numpy as np
 import pandas as pd
 import tensorflow as tf

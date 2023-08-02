@@ -11,7 +11,8 @@ import json
 #tf.config.experimental.set_memory_growth(physical_devices[0], enable=True)
 
 class Policy_Validate(object):
-	def __init__(self,data_dir,agentIndex,MVindex,SVindex,PVindex,dt1=None,episode_length=240):
+	def __init__(self,data_dir,agentIndex,MVindex,SVindex,PVindex,
+	      agent_lookback,dt1=None,episode_length=240,):
 
 		with open('val.json', 'r') as savefile:
 			self.data_dict = json.load(savefile)
@@ -23,6 +24,7 @@ class Policy_Validate(object):
 		self.SVindex = SVindex
 		self.PVindex=PVindex
 		self.episode_length = episode_length
+		self.max_lookback = agent_lookback
 		self.get_min_max()
 
 	def loadEnv(self):
@@ -49,6 +51,8 @@ class Policy_Validate(object):
 		self.dt1_targetmin = dt1_config['targetmin']
 		self.dt1_targetmax = dt1_config['targetmax']
 		self.dt1_scanrate = dt1_config['scanrate']
+
+		self.max_lookback = max(self.max_lookback,self.dt1_lookback)
 	
 	def get_min_max(self):
 		#find the max and min SV
@@ -95,7 +99,7 @@ class Policy_Validate(object):
 		data['TimeStamp'] = 0
 		data = np.asarray(data).astype('float32')
 
-		data_needed = self.episode_length + self.dt1_lookback
+		data_needed = self.episode_length + self.max_lookback
 
 		#get random data to generate an episode
 		startline = random.choice(range(0,data.shape[0]-data_needed))
@@ -103,16 +107,16 @@ class Policy_Validate(object):
 		self.episodedata = data[startline:endline]
 
 		#get the first rows as the start state to return
-		start_state = self.episodedata[:self.dt1_lookback,self.agentIndex]
+		start_state = self.episodedata[:self.max_lookback,self.agentIndex]
 
 		#make an empty array to start the episode
 		self.episode_array = np.zeros((self.episodedata.shape),dtype='float32')
 
 		#fill it with enough data to make first line
-		self.episode_array[0:self.dt1_lookback] = self.episodedata[0:self.dt1_lookback]
+		self.episode_array[0:self.max_lookback] = self.episodedata[0:self.max_lookback]
 
 		#initalize a counter to keep track of the episode
-		self.transition_count = self.dt1_lookback
+		self.transition_count = self.max_lookback
 
 		#inatilize a done flag to end the episode
 		self.done = False
@@ -145,10 +149,10 @@ class Policy_Validate(object):
 		self.episode_array[self.transition_count,self.MVindex] = action
 
 		#get the new state to return
-		state_ = self.episode_array[self.transition_count-self.dt1_lookback+1:self.transition_count+1,self.agentIndex]
+		state_ = self.episode_array[self.transition_count-self.max_lookback+1:self.transition_count+1,self.agentIndex]
 		
 		#check if done
-		if self.transition_count > self.episode_length + self.dt1_lookback-2:
+		if self.transition_count > self.episode_length + self.max_lookback-2:
 			self.done = True
 
 		#adVance counter
@@ -175,7 +179,7 @@ class Policy_Validate(object):
 		#get error sum
 		self.policy_error = 0
 		self.PID_error = 0
-		for i in range(self.dt1_lookback,self.episode_length-1):
+		for i in range(self.max_lookback,self.episode_length-1):
 			self.policy_error += abs(self.episode_array[i,self.SVindex]-self.episode_array[i,self.PVindex])
 			self.PID_error += abs(self.episodedata[i,self.SVindex]-self.episodedata[i,self.PVindex])
 

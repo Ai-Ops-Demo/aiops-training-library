@@ -1,11 +1,10 @@
-# keep tf from reserving 100% of GPU for this instance
 import tensorflow as tf
 import json
 from AIOP.Policy_Validate import Policy_Validate
-from tensorflow.python.keras.models import load_model
 
-gpu = tf.config.experimental.list_physical_devices('GPU')
-tf.config.experimental.set_memory_growth(gpu[0], True)
+
+# gpu = tf.config.experimental.list_physical_devices('GPU')
+# tf.config.experimental.set_memory_growth(gpu[0], True)
 
 #get a list of the training files
 data_dir= './data/norm_data/'
@@ -14,14 +13,15 @@ with open('val.json', 'r') as savefile:
 
 #list digital twin experiment files
 dt1 = [
-	'5sDT/LIC101_AiPV7996', #velocity
+	'dt/LIC101_AiPV7588', 
+	'dt/LIC101_AiPV7911', 
+	'dt/LIC101_AiPV9215', 
 		]
 
 #list controller models
-model_dir = 'LIC01_AiMV3344/' #velocity
-print(model_dir)
+model_dir = 'LIC01_AiMV6625/' 
 modelname = 'LIC01_AiMV_policy.tflite'
-# model = load_model(model_dir+modelname)
+
 
 # Load the TFLite model and allocate tensors.
 model = tf.lite.Interpreter(model_dir+modelname)
@@ -43,17 +43,17 @@ agent_lookback = config['agent_lookback']
 training_scanrate = config['training_scanrate']
 
 
-episode_length = 1000
+episode_length = 500
 
 ##################################################################
 #---------------------Validate Policy----------------------------
 ##################################################################
 
-for ep in range(2):
+for ep in range(4):
 	#Import Validation Tool
 	val = Policy_Validate(data_dir=data_dir,agentIndex=agentIndex,MVindex=MVindex,
-				SVindex=SVindex,PVindex=PVindex,
-				dt1=dt1,episode_length=episode_length)
+				SVindex=SVindex,PVindex=PVindex,dt1=dt1,episode_length=episode_length,
+				agent_lookback=agent_lookback)
 
 	#initalize validation loop
 	state,done = val.reset()
