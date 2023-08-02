@@ -3,9 +3,9 @@ import tensorflow as tf
 import pandas as pd 
 import json
 import os
-from tensorflow.python.keras.models import Sequential,load_model
-from tensorflow.python.keras.layers import Dense,GRU,Activation
-from tensorflow.python.keras.optimizer_v2.adam import Adam
+from keras.models import Sequential
+from keras.layers import Dense,GRU,Activation
+from keras.optimizers import Adam
 from AIOP.DT_Validate import DT_Validate
 
 #cuDnn bug fix

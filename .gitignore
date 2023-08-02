@@ -11,6 +11,7 @@ __pycache__/
 */.csv
 /env
 *.json
+/dt
 
 # Distribution / packaging
 .Python
